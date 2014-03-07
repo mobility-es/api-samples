@@ -1,0 +1,35 @@
+{
+    "messages": [{
+        "_id": "msg_1",
+        "type": "sample",
+        "created": 1393865316588,
+        "activeFrom": 1393865316588,
+        "read": true,
+        "payload": {
+            "title":"title1",
+            "description": "Message description1"
+        }
+    }, {
+        "_id": "msg_2",
+        "type": "sample",
+        "created": 1393868194653,
+        "activeFrom": 1393868194653,
+        "timeToLive": 60,
+        "read": false,
+        "payload": {
+            "title":"title2",
+            "description": "Message description2"
+        }
+    }, {
+        "_id": "msg_3",
+        "type": "sample",
+        "created": 1393865516588,
+        "activeFrom": 1393865516588,
+        "read": true,
+        "payload": {
+            "title":"title3",
+            "description": "Message description3"
+        }
+    }],
+    "attachments": {}
+}

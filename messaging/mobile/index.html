@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="Messaging API Sample">
+
+    <!-- Mobile viewport optimization h5bp.com/ad -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+    <!-- Disable auto phone numbers recognition which causes ghost clicks -->
+    <meta name="format-detection" content="telephone=no"/>
+
+    <link rel="stylesheet" href="css/main.css" type="text/css"/>
+
+    <!-- Include Core API -->
+    <script src="aiq/aiq-api.js"></script>
+
+    <script src="js/main.js"></script>
+</head>
+<body>
+    <form id="form">
+        <fieldset>
+            <legend>This application showcases how AIQ SO Messaging works.</legend>
+            <label>Message type: <input type="text" name="type" id="typeField" autofocus="autofocus"></label>
+            <button id="fetchBtn" disabled="disabled">Fetch</button>
+        </fieldset>
+    </form>
+    <div id="infoPanel">Number of messages: <span id="msgNum">0</span></div>
+    <ul id="list">
+        <li id="msgTemplate">
+            <span class="time"></span><span class="title"></span>
+            <dl class="details clearfix">
+                <dt>Message ID:</dt><dd class="id"></dd>
+                <dt>Message Type:</dt><dd class="type"></dd>
+                <dt>Description:</dt><dd class="description"></dd>
+                <div class="dates">
+                    <dt>Created:</dt><dd class="created"></dd>
+                    <dt>Expiry:</dt><dd class="expiry">Not set</dd>
+                </div>
+            </dl>
+            <div class="actions">
+                <button class="js-mark-as-read">Mark As Read</button>
+                <button class="js-delete">Delete</button>
+                <button class="js-bind-events">Bind Events</button>
+            </div>
+        </li>
+    </ul>
+    <script>
+        var domTemplate = document.getElementById('msgTemplate'),
+            template = domTemplate.cloneNode(true);
+
+        domTemplate.remove();
+
+        template.removeAttribute('id');
+
+        var controller = new Controller({
+            form: document.getElementById('form'),
+            typeField: document.getElementById('typeField'),
+            fetchButton: document.getElementById('fetchBtn'),
+            msgNum: document.getElementById('msgNum'),
+            msgList: document.getElementById('list'),
+            msgTemplate: template
+        });
+
+        // Wait for AIQ Api
+        document.addEventListener('aiq-ready', controller.initHandlers.bind(controller), false);
+    </script>
+</body>
+</html>
