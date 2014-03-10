@@ -144,6 +144,7 @@
                 aiq.messaging.bind('message-updated', {_id: data._id, callback: function (id) {
                     alert('Message "' + id + '" was updated.');
                 }});
+                this.disabled = true;
             });
 
             // Keep back reference to the DOM Element
@@ -167,7 +168,7 @@
     Controller.prototype._onMsgReceivedOrUpdated = function (id) {
         aiq.messaging.getMessage(id, {
             success: this.renderMsg.bind(this),
-            error: falert,
+            error: alert,
             fail: alert
         });
     };

@@ -121,9 +121,10 @@ html, body {
             display: none;
         }
         .actions button {
-            width: 31%;
+            width: 30%;
             height: 3em;
             margin-left: 3%;
+            vertical-align: top;
         }
         .actions button:first-child {
             margin-left: 0;
