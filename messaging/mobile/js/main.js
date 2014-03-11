@@ -61,7 +61,9 @@
     //FIXME: remove bindings by ID
     Controller.prototype.deleteMsgById = function (id) {
         if (this._msgElements[id]) {
+            // Remove the Element from a DOM
             this._msgElements[id].remove();
+            // Remove the reference
             delete this._msgElements[id];
         }
     };
