@@ -132,7 +132,10 @@
             $template.querySelector('.js-delete').addEventListener('click', function (e) {
                 e.stopPropagation();
                 aiq.messaging.deleteMessage(data._id, {
-                    success: that.deleteMsgById.bind(that),
+                    success: function(){
+                        that.deleteMsgById(data._id);
+                        that.refreshMsgNumLabel();
+                    },
                     error: alert,
                     fail: alert
                 });
