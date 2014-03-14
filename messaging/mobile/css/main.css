@@ -112,9 +112,9 @@ html, body {
         .details dt {
             font-weight: bold;
         }
-        .details .dates {
-            float: right;
-            font-size: .8em;
+
+        .details dd {
+            margin-left: .5em;
         }
 
         .actions {
