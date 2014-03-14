@@ -1,6 +1,6 @@
 {
     "messages": [{
-        "_id": "msg_1",
+        "_id": "50de2485-6eb3-460d-8a3d-45dff3b1c7b7",
         "type": "sample",
         "created": 1393865316588,
         "activeFrom": 1393865316588,
@@ -10,7 +10,7 @@
             "description": "Message description1"
         }
     }, {
-        "_id": "msg_2",
+        "_id": "a7b39c30-62d4-4042-a859-e7a34b3e3341",
         "type": "sample",
         "created": 1393868194653,
         "activeFrom": 1393868194653,
@@ -21,7 +21,7 @@
             "description": "Message description2"
         }
     }, {
-        "_id": "msg_3",
+        "_id": "f48b64e2-587d-4ff1-99c2-0655b5bdc2f1",
         "type": "sample",
         "created": 1393865516588,
         "activeFrom": 1393865516588,
