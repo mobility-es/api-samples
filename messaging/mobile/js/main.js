@@ -9,6 +9,7 @@
     function Controller (elements) {
         this.$ = elements;
         this._prevType = '';
+        this._bindingsById = [];
         this._msgElements = {};
 
         // Force context for callbacks
@@ -27,11 +28,11 @@
 
         e.preventDefault();
 
-        //FIXME: remove bindings by id
         if (this._prevType) {
             this.cleanup();
         }
 
+        // Request all existent Messages
         aiq.messaging.getMessages(type, {
             success: function (messages) {
                 messages.forEach(that.renderMsg, that);
@@ -39,6 +40,8 @@
             error: alert,
             fail: alert
         });
+
+        // Listen for any changes
         aiq.messaging.bind('message-received', {type: type, callback: this._onMsgReceivedOrUpdated});
         aiq.messaging.bind('message-updated', {type: type, callback: this._onMsgReceivedOrUpdated});
         aiq.messaging.bind('message-expired', {type: type, callback: this._onMsgExpired});
@@ -47,23 +50,45 @@
     };
 
     Controller.prototype.cleanup = function () {
-        aiq.messaging.unbind(this._onMsgReceivedOrUpdated);
-        aiq.messaging.unbind(this._onMsgExpired);
+        // Remove global listeners
+        aiq.messaging.unbind('message-received', {type: this._prevType});
+        aiq.messaging.unbind('message-updated', {type: this._prevType});
+        aiq.messaging.unbind('message-expired', {type: this._prevType});
+
+        // Remove ID specific listeners
+        this._bindingsById.forEach(function (id) {
+            aiq.messaging.unbind('message-expired', {_id: id});
+            aiq.messaging.unbind('message-updated', {_id: id});
+        });
 
         // Cleanup the DOM
         this.$.msgList.innerHTML = '';
 
         this._msgElements = {};
 
+        this._prevType = '';
+        this._bindingsById = [];
+
         this.refreshMsgNumLabel();
     };
 
-    //FIXME: remove bindings by ID
     Controller.prototype.deleteMsgById = function (id) {
         if (this._msgElements[id]) {
+
+            // Remove ID specific bindings
+            var cbIdx = this._bindingsById.indexOf(id);
+            if (cbIdx !== -1) {
+                aiq.messaging.unbind('message-expired', {_id: id});
+                aiq.messaging.unbind('message-updated', {_id: id});
+
+                // Remove the reference
+                this._bindingsById.splice(cbIdx, 1);
+            }
+
             // Remove the Element from a DOM
             this._msgElements[id].remove();
-            // Remove the reference
+
+            // Remove reference to the Element
             delete this._msgElements[id];
         }
     };
@@ -98,6 +123,11 @@
                 getDateFormatted((data.activeFrom || data.created) + data.timeToLive * 1000);
         }
 
+        function markElementAsRead () {
+            $template.classList.add('read');
+            $markAsReadBtn.disabled = true;
+        }
+
         // Bind event only if this is a new Element
         if (isNew) {
             $template.addEventListener('click', function () {
@@ -113,16 +143,13 @@
 
             var $markAsReadBtn = $template.querySelector('.js-mark-as-read');
             if (data.read) {
-                $template.classList.add('read');
-                $markAsReadBtn.disabled = true;
+                markElementAsRead();
             } else {
                 $markAsReadBtn.addEventListener('click', function (e) {
+                    // Prevent Element's collapsing in case of Button click
                     e.stopPropagation();
                     aiq.messaging.markMessageAsRead(data._id, {
-                        success: function () {
-                            $template.classList.add('read');
-                            $markAsReadBtn.disabled = true;
-                        },
+                        success: markElementAsRead,
                         error: alert,
                         fail: alert
                     });
@@ -130,9 +157,10 @@
             }
 
             $template.querySelector('.js-delete').addEventListener('click', function (e) {
+                // Prevent Element's collapsing in case of Button click
                 e.stopPropagation();
                 aiq.messaging.deleteMessage(data._id, {
-                    success: function(){
+                    success: function() {
                         that.deleteMsgById(data._id);
                         that.refreshMsgNumLabel();
                     },
@@ -142,13 +170,20 @@
             });
 
             $template.querySelector('.js-bind-events').addEventListener('click', function (e) {
+                // Prevent Element's collapsing in case of Button click
                 e.stopPropagation();
+
                 aiq.messaging.bind('message-expired', {_id: data._id, callback: function (id) {
                     alert('Message "' + id + '" is expired now.');
                 }});
                 aiq.messaging.bind('message-updated', {_id: data._id, callback: function (id) {
                     alert('Message "' + id + '" was updated.');
                 }});
+
+                // Keep track of ID specific bindings
+                that._bindingsById.push(data._id);
+
+                // Prevent redundant bindings
                 this.disabled = true;
             });
 
