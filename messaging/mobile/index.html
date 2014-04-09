@@ -18,6 +18,9 @@
     <script src="aiq/aiq-api.js"></script>
 
     <script src="js/main.js"></script>
+
+    <!-- Polyfill for Android v2.3 -->
+    <script src="js/classList.min.js"></script>
 </head>
 <body>
     <form id="form">
@@ -51,7 +54,7 @@
         var domTemplate = document.getElementById('msgTemplate'),
             template = domTemplate.cloneNode(true);
 
-        domTemplate.remove();
+        domTemplate.parentNode.removeChild(domTemplate);
 
         template.removeAttribute('id');
 
