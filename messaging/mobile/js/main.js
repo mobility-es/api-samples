@@ -86,7 +86,7 @@
             }
 
             // Remove the Element from a DOM
-            this._msgElements[id].remove();
+            this._msgElements[id].parentNode.removeChild(this._msgElements[id]);
 
             // Remove reference to the Element
             delete this._msgElements[id];
